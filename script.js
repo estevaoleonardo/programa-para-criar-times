@@ -1,53 +1,64 @@
 const playerForm = document.getElementById("playerForm");
 const playerList = document.getElementById("playerList");
 const createTeamsButton = document.getElementById("createTeams");
+const reshuffleTeamsButton = document.getElementById("reshuffleTeams");
 const resetTeamsButton = document.getElementById("resetTeams");
+const randomizeTeamsCheckbox = document.getElementById("randomizeTeams");
+const fullRandomCheckbox = document.getElementById("fullRandom");
 const teamsDisplay = document.querySelector(".teams-display");
+
+// Mensagem de erro
+const errorMessageDiv = document.createElement("div");
+errorMessageDiv.id = "errorMessage";
+errorMessageDiv.style.color = "red";
+errorMessageDiv.style.marginTop = "10px";
+playerForm.appendChild(errorMessageDiv);
 
 let players = [];
 
-// Formação desejada: 7 jogadores
 const formation = {
-    "Goleiro": 1,
-    "Zagueiro": 2,
-    "Lateral Direito": 1,
-    "Lateral Esquerdo": 1,
-    "Volante": 1,
-    "Atacante": 1
+  "Goleiro": 1,
+  "Zagueiro": 2,
+  "Lateral Direito": 1,
+  "Lateral Esquerdo": 1,
+  "Volante": 1,
+  "Atacante": 1,
 };
 
-playerForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+const savedPlayers = localStorage.getItem("jogadores");
+if (savedPlayers) {
+  players = JSON.parse(savedPlayers);
+  players.forEach(renderPlayer);
+}
 
-    const name = document.getElementById("playerName").value.trim();
-    const position = document.getElementById("playerPosition").value;
+function salvarJogadores() {
+  localStorage.setItem("jogadores", JSON.stringify(players));
+}
 
-    if (!name || !position) return;
+function renderPlayer(player) {
+  const listItem = document.createElement("li");
+  listItem.setAttribute("data-id", player.id);
 
-    players.push({ name, position, used: false });
+  const text = document.createElement("span");
+  text.textContent = `${player.name} - ${player.position}`;
+  listItem.appendChild(text);
 
-   const index = players.length - 1;
-const listItem = document.createElement("li");
-listItem.setAttribute("data-index", index);
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "Editar";
+  editBtn.classList.add("edit-btn");
 
-const text = document.createElement("span");
-text.textContent = `${name} - ${position}`;
-listItem.appendChild(text);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Excluir";
+  deleteBtn.classList.add("delete-btn");
 
-// Botão Editar
-const editBtn = document.createElement("button");
-editBtn.textContent = "Editar";
-editBtn.classList.add("edit-btn");
-editBtn.addEventListener("click", () => {
-    const currentPlayer = players[index];
+  editBtn.addEventListener("click", () => {
     const select = document.createElement("select");
-
     Object.keys(formation).forEach(pos => {
-        const option = document.createElement("option");
-        option.value = pos;
-        option.textContent = pos;
-        if (pos === currentPlayer.position) option.selected = true;
-        select.appendChild(option);
+      const option = document.createElement("option");
+      option.value = pos;
+      option.textContent = pos;
+      if (pos === player.position) option.selected = true;
+      select.appendChild(option);
     });
 
     const saveBtn = document.createElement("button");
@@ -55,141 +66,165 @@ editBtn.addEventListener("click", () => {
     saveBtn.classList.add("save-btn");
 
     saveBtn.addEventListener("click", () => {
-        const newPos = select.value;
-        players[index].position = newPos;
-        text.textContent = `${players[index].name} - ${newPos}`;
-        listItem.removeChild(select);
-        listItem.removeChild(saveBtn);
-        listItem.appendChild(editBtn);
-        listItem.appendChild(deleteBtn);
+      const newPos = select.value;
+      player.position = newPos;
+      text.textContent = `${player.name} - ${newPos}`;
+      listItem.removeChild(select);
+      listItem.removeChild(saveBtn);
+      listItem.appendChild(editBtn);
+      listItem.appendChild(deleteBtn);
+      salvarJogadores();
     });
 
-    listItem.removeChild(editBtn);
-    listItem.removeChild(deleteBtn);
+    listItem.innerHTML = '';
+    listItem.appendChild(text);
     listItem.appendChild(select);
     listItem.appendChild(saveBtn);
+  });
+
+  deleteBtn.addEventListener("click", () => {
+    players = players.filter(p => p.id !== player.id);
+    playerList.removeChild(listItem);
+    salvarJogadores();
+  });
+
+  listItem.appendChild(editBtn);
+  listItem.appendChild(deleteBtn);
+  playerList.appendChild(listItem);
+}
+
+playerForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const nameInput = document.getElementById("playerName");
+  const position = document.getElementById("playerPosition").value;
+  const name = nameInput.value.trim();
+
+  errorMessageDiv.textContent = "";
+
+  if (!name || !position) return;
+
+  if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+    errorMessageDiv.textContent = "⚠️ Já existe um jogador com esse nome!";
+    return;
+  }
+
+  const player = { id: Date.now(), name, position, used: false };
+  players.push(player);
+  renderPlayer(player);
+  salvarJogadores();
+  playerForm.reset();
 });
 
-// Botão Excluir
-const deleteBtn = document.createElement("button");
-deleteBtn.textContent = "Excluir";
-deleteBtn.classList.add("delete-btn");
-deleteBtn.addEventListener("click", () => {
-    players.splice(index, 1); // remove do array
-    playerList.removeChild(listItem); // remove da tela
-});
+function shuffleArray(arr) {
+  const array = [...arr];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
 
-listItem.appendChild(editBtn);
-listItem.appendChild(deleteBtn);
-playerList.appendChild(listItem);
+function createTeams() {
+  teamsDisplay.innerHTML = "";
 
+  if (randomizeTeamsCheckbox.checked && fullRandomCheckbox.checked) {
+    alert("Por favor, selecione apenas uma opção de aleatoriedade.");
+    return;
+  }
 
-    playerForm.reset();
-});
+  const availablePlayers = players.filter(p => !p.used);
+  if (availablePlayers.length === 0) {
+    teamsDisplay.innerHTML = "<p>Não há jogadores disponíveis para formar times.</p>";
+    return;
+  }
 
-createTeamsButton.addEventListener("click", function () {
-    const availablePlayers = players.filter(p => !p.used);
+  let teams = [];
+  let numTeamsFormed = null;
 
+  if (fullRandomCheckbox.checked) {
+    const shuffled = shuffleArray(availablePlayers);
+    const totalPlayersPerTeam = Object.values(formation).reduce((a, b) => a + b, 0);
+    const numTeams = Math.floor(shuffled.length / totalPlayersPerTeam);
+    if (numTeams === 0) {
+      teamsDisplay.innerHTML = "<p>Jogadores insuficientes para formar times completos.</p>";
+      return;
+    }
+    teams = Array.from({ length: numTeams }, () => []);
+    for (let i = 0; i < numTeams * totalPlayersPerTeam; i++) {
+      teams[i % numTeams].push(shuffled[i]);
+    }
+    numTeamsFormed = numTeams;
+  } else {
     const playersByPosition = {};
     Object.keys(formation).forEach(pos => playersByPosition[pos] = []);
+
     availablePlayers.forEach(player => {
-        if (playersByPosition[player.position]) {
-            playersByPosition[player.position].push(player);
-        }
+      if (playersByPosition[player.position]) {
+        playersByPosition[player.position].push(player);
+      }
     });
 
-    const maxTeamsPerPosition = Object.entries(formation).map(([pos, qty]) => {
-        return Math.floor(playersByPosition[pos].length / qty);
-    });
+    const possibleTeams = Object.entries(formation).map(
+      ([pos, qty]) => Math.floor(playersByPosition[pos].length / qty)
+    );
 
-    const numTeams = Math.min(...maxTeamsPerPosition);
-
+    const numTeams = Math.min(...possibleTeams);
     if (numTeams === 0) {
-        const message = document.createElement("p");
-        message.textContent = "Não há jogadores suficientes para formar times completos.";
-        teamsDisplay.appendChild(message);
-    } else {
-        const rodadaDiv = document.createElement("div");
-        rodadaDiv.classList.add("rodada");
-
-        const rodadaNum = document.querySelectorAll(".rodada").length + 1;
-        const rodadaTitle = document.createElement("h3");
-        rodadaTitle.textContent = `Rodada ${rodadaNum}`;
-        rodadaDiv.appendChild(rodadaTitle);
-
-        for (let i = 0; i < numTeams; i++) {
-            const teamDiv = document.createElement("div");
-            teamDiv.classList.add("team");
-
-            const teamTitle = document.createElement("h4");
-            teamTitle.textContent = `Time ${i + 1}`;
-            teamDiv.appendChild(teamTitle);
-
-            const ul = document.createElement("ul");
-
-            Object.entries(formation).forEach(([pos, qty]) => {
-                for (let j = 0; j < qty; j++) {
-                    const player = playersByPosition[pos].shift();
-                    player.used = true;
-                    const li = document.createElement("li");
-                    li.textContent = `${player.name} - ${pos}`;
-                    ul.appendChild(li);
-                }
-            });
-
-            teamDiv.appendChild(ul);
-            rodadaDiv.appendChild(teamDiv);
-        }
-
-        teamsDisplay.appendChild(rodadaDiv);
+      teamsDisplay.innerHTML = "<p>Jogadores insuficientes para formar times completos.</p>";
+      return;
     }
 
-    // Verifica posições faltantes
-    const shortages = {};
+    teams = Array.from({ length: numTeams }, () => []);
     Object.entries(formation).forEach(([pos, qty]) => {
-        const remaining = playersByPosition[pos].length;
-        const needed = qty;
-        if (remaining < needed) {
-            shortages[pos] = needed - remaining;
-        }
+      let list = playersByPosition[pos];
+      if (randomizeTeamsCheckbox.checked) list = shuffleArray(list);
+      for (let i = 0; i < numTeams * qty; i++) {
+        teams[i % numTeams].push(list[i]);
+      }
     });
 
-    if (Object.keys(shortages).length > 0) {
-        const shortageMessage = document.createElement("div");
-        shortageMessage.classList.add("shortage-message");
+    numTeamsFormed = numTeams;
+  }
 
-        let msg = `<strong>Faltam jogadores para formar mais um time:</strong><ul>`;
-        for (const [pos, qty] of Object.entries(shortages)) {
-            msg += `<li>${pos}: precisa de mais ${qty}</li>`;
-        }
-        msg += `</ul>`;
+  players.forEach(p => p.used = false);
+  teams.forEach(team => team.forEach(p => {
+    const player = players.find(pl => pl.id === p.id);
+    if (player) player.used = true;
+  }));
 
-        shortageMessage.innerHTML = msg;
-        teamsDisplay.appendChild(shortageMessage);
-    }
+  const rodadaDiv = document.createElement("div");
+  rodadaDiv.classList.add("rodada");
+  const rodadaNum = document.querySelectorAll(".rodada").length + 1;
+  rodadaDiv.innerHTML = `<h3>Rodada ${rodadaNum}</h3>`;
+  teams.forEach((team, i) => {
+    const teamDiv = document.createElement("div");
+    teamDiv.classList.add("team");
+    teamDiv.innerHTML = `<h4>Time ${i + 1}</h4><ul>${
+      team.map(p => `<li>${p.name} - ${p.position}</li>`).join("")
+    }</ul>`;
+    rodadaDiv.appendChild(teamDiv);
+  });
 
-    // Lista jogadores restantes
-    const remainingPlayers = players.filter(p => !p.used);
-    if (remainingPlayers.length > 0) {
-        const leftovers = document.createElement("div");
-        leftovers.classList.add("shortage-message");
+  teamsDisplay.appendChild(rodadaDiv);
 
-        let msg = `<strong>Jogadores que sobraram:</strong><ul>`;
-        remainingPlayers.forEach(p => {
-            msg += `<li>${p.name} - ${p.position}</li>`;
-        });
-        msg += `</ul>`;
+  const remaining = players.filter(p => !p.used);
+  if (remaining.length > 0) {
+    const div = document.createElement("div");
+    div.classList.add("shortage-message");
+    div.innerHTML = `<strong>Jogadores que sobraram:</strong><ul>${remaining.map(p => `<li>${p.name} - ${p.position}</li>`).join("")}</ul>`;
+    teamsDisplay.appendChild(div);
+  }
 
-        leftovers.innerHTML = msg;
-        teamsDisplay.appendChild(leftovers);
-    }
-});
+  salvarJogadores();
+}
 
-// Botão para resetar times e liberar todos os jogadores
+createTeamsButton.addEventListener("click", createTeams);
+reshuffleTeamsButton.addEventListener("click", createTeams);
+
 resetTeamsButton.addEventListener("click", function () {
-    players.forEach(player => {
-        player.used = false;
-    });
-
-    teamsDisplay.innerHTML = "<p>Todos os jogadores foram liberados para nova formação de times.</p>";
+  players.forEach(p => p.used = false);
+  teamsDisplay.innerHTML = "<p>Todos os jogadores foram liberados para nova formação de times.</p>";
+  salvarJogadores();
+  randomizeTeamsCheckbox.checked = false;
+  fullRandomCheckbox.checked = false;
 });

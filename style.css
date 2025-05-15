@@ -1,18 +1,17 @@
+/* ------------------------------
+   ESTILOS GERAIS
+------------------------------ */
 body {
     font-family: sans-serif;
     margin: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-   
-    background-image: url('/img/gollaço.jpg'); /* substitua pelo nome do seu arquivo */
+    background: #f4f4f4 url('img/gollaço.jpg') no-repeat center center;
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
+    color: #333;
 }
 
-
-
+/* ------------------------------
+   CONTAINER PRINCIPAL
+------------------------------ */
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -22,6 +21,9 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* ------------------------------
+   CABEÇALHOS
+------------------------------ */
 .main-header h1 {
     text-align: center;
     color: #007bff;
@@ -38,6 +40,9 @@ body {
     margin-bottom: 15px;
 }
 
+/* ------------------------------
+   FORMULÁRIO
+------------------------------ */
 .form-group {
     margin-bottom: 15px;
 }
@@ -53,22 +58,37 @@ body {
 .form-group select {
     width: calc(100% - 10px);
     padding: 8px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+input.error,
+select.error {
+    border-color: red;
+    background-color: #ffe6e6;
+}
+
+/* ------------------------------
+   BOTÕES
+------------------------------ */
+.add-button,
+.create-teams-button,
+.reset-teams-button {
+    padding: 10px 15px;
     font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s ease;
 }
 
 .add-button,
 .create-teams-button {
     background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
 .add-button:hover,
@@ -76,107 +96,27 @@ body {
     background-color: #0056b3;
 }
 
-.player-list {
-    list-style: none;
-    padding: 0;
-}
-
-.player-list li {
-    background-color: #f9f9f9;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.player-list li span {
-    flex-grow: 1;
-}
-
-.player-list li button {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.player-list li button:hover {
-    background-color: #c82333;
-}
-
-.teams-display {
-    margin-top: 15px;
-}
-
-.team {
-    background-color: #e9ecef;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #dee2e6;
-}
-
-.team h3 {
-    margin-top: 0;
-    color: #333;
-}
-
-.team ul {
-    list-style: none;
-    padding: 0;
-}
-
-.team ul li {
-    padding: 5px 0;
-}
-.team {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 15px;
-    background-color: #f9f9f9;
-}
-.shortage-message {
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-    padding: 10px;
-    margin-top: 20px;
-    border-radius: 6px;
-    color: #856404;
-}
-.shortage-message ul {
-    margin-top: 5px;
-    padding-left: 20px;
-}
 .reset-teams-button {
-    margin-left: 10px;
-    padding: 10px 15px;
     background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.2s;
+    border-radius: 6px;
+    margin-left: 10px;
 }
+
 .reset-teams-button:hover {
     background-color: #c82333;
 }
-.edit-btn, .delete-btn, .save-btn {
+
+/* Botões de ações individuais */
+.edit-btn,
+.delete-btn,
+.save-btn {
     margin-left: 10px;
     padding: 3px 5px;
+    font-size: 0.85em;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.85em;
 }
 
 .edit-btn {
@@ -192,4 +132,181 @@ body {
 .delete-btn {
     background-color: #dc3545;
     color: white;
+}
+
+/* ------------------------------
+   LISTA DE JOGADORES
+------------------------------ */
+.player-list {
+    list-style: none;
+    padding: 0;
+}
+
+.player-list li {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-list li span {
+    flex-grow: 1;
+}
+
+/* ------------------------------
+   TIMES E RODADAS
+------------------------------ */
+.teams-display {
+    margin-top: 15px;
+}
+
+.team {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.team h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.team ul {
+    list-style: none;
+    padding: 0;
+}
+
+.team ul li {
+    padding: 5px 0;
+}
+
+/* ------------------------------
+   MENSAGENS
+------------------------------ */
+.shortage-message {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 6px;
+}
+
+.shortage-message ul {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+#errorMessage,
+.error-message {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: 10px;
+    max-width: 400px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.saved-message {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* ------------------------------
+   ACESSIBILIDADE
+------------------------------ */
+button:focus,
+input:focus,
+select:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* ------------------------------
+   RESPONSIVIDADE
+------------------------------ */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    h1, h2, h3, h4 {
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .add-button,
+    .create-teams-button,
+    .reset-teams-button {
+        width: 100%;
+        margin-top: 10px;
+        font-size: 15px;
+    }
+
+    .player-list li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .player-list li button {
+        margin-top: 5px;
+        margin-left: 0;
+    }
+
+    .team {
+        padding: 8px;
+    }
+
+    .shortage-message {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.1em;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+    }
+
+    .add-button,
+    .create-teams-button,
+    .reset-teams-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .player-list li {
+        font-size: 14px;
+    }
 }

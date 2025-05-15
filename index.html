@@ -1,57 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Organizador de Jogos</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organizador de Jogos</title>
+  <link rel="stylesheet" href="style.css" />
+  <link 
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  />
 </head>
 <body>
+
+  <div class="container">
     
-    <div class="container">
-        <header class="main-header">
-            <h1>Organizador de Jogos</h1>
-        </header>
+    <!-- Cabeçalho -->
+    <header class="main-header">
+      <h1>Organizador de Jogos</h1>
+    </header>
 
-        <section class="add-player-section">
-            <h2>Adicionar Jogador</h2>
-            <form id="playerForm">
-                <div class="form-group">
-                    <label for="playerName">Nome do jogador:</label>
-                    <input type="text" id="playerName" placeholder="Nome do jogador" required />
-                </div>
-                <div class="form-group">
-                    <label for="playerPosition">Posição:</label>
-                    <select id="playerPosition" required>
-                        <option value="" disabled selected>Selecione a posição</option>
-                        <option value="Goleiro">Goleiro</option>
-                        <option value="Zagueiro">Zagueiro</option>
-                        <option value="Lateral Direito">Lateral Direito</option>
-                        <option value="Lateral Esquerdo">Lateral Esquerdo</option>
-                        <option value="Volante">Volante</option>
-                        <option value="Atacante">Atacante</option>
-                    </select>
-                </div>
-                <button type="submit" class="add-button">Adicionar</button>
-            </form>
-        </section>
+    <!-- Seção: Adicionar jogador -->
+    <section class="add-player-section">
+      <h2>Adicionar Jogador</h2>
+      <form id="playerForm">
+        <div class="form-group">
+          <label for="playerName">Nome do jogador:</label>
+          <input 
+            type="text" 
+            id="playerName" 
+            placeholder="Nome do jogador" 
+            required 
+          />
+        </div>
 
-        <section class="player-list-section">
-            <h2>Jogadores Adicionados:</h2>
-            <ul id="playerList" class="player-list">
-            </ul>
-        </section>
+        <div class="form-group">
+          <label for="playerPosition">Posição:</label>
+          <select id="playerPosition" required>
+            <option value="" disabled selected>Selecione a posição</option>
+            <option value="Goleiro">Goleiro</option>
+            <option value="Zagueiro">Zagueiro</option>
+            <option value="Lateral Direito">Lateral Direito</option>
+            <option value="Lateral Esquerdo">Lateral Esquerdo</option>
+            <option value="Volante">Volante</option>
+            <option value="Atacante">Atacante</option>
+          </select>
+        </div>
 
-       <section class="team-creation-section">
-    <button id="createTeams" class="create-teams-button">Criar Times</button>
-    <button id="resetTeams" class="reset-teams-button">Resetar Times</button>
-</section>
+        <button type="submit" class="add-button">Adicionar</button>
+      </form>
+    </section>
 
-        
+    <!-- Seção: Lista de jogadores -->
+    <section class="player-list-section">
+      <h2>Jogadores Adicionados:</h2>
+      <ul id="playerList" class="player-list"></ul>
+    </section>
+
+    <!-- Seção: Criação de times -->
+    <section class="team-creation-section">
+      <div class="controls">
+
+        <!-- Opções de aleatoriedade -->
+        <div 
+          class="options" 
+          style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px;"
+        >
+          <label>
+            <input type="checkbox" id="randomizeTeams" />
+            Aleatoriedade Controlada (respeitar posições)
+          </label>
+          <label>
+            <input type="checkbox" id="fullRandom" />
+            Aleatoriedade Total (ignorar posições)
+          </label>
+        </div>
+
+        <!-- Botões de ação -->
+        <button id="createTeams" class="create-teams-button">Criar Times</button>
+        <button id="reshuffleTeams" class="create-teams-button">Sortear Novos Times</button>
+        <button id="resetTeams" class="reset-teams-button">Resetar Times</button>
+      </div>
+    </section>
+
+    <!-- Área onde os times serão exibidos -->
+    <section class="teams-display"></section>
+
+  </div>
+
+  <!-- Script principal -->
+  <script src="script.js"></script>
+</body>
+</html>
 
         <section id="teamsContainer" class="teams-section">
             <h2>Times Formados:</h2>
