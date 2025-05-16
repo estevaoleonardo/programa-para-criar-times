@@ -1,5 +1,5 @@
 /* ------------------------------
-   ESTILOS GERAIS
+    ESTILOS GERAIS
 ------------------------------ */
 body {
     font-family: sans-serif;
@@ -10,7 +10,7 @@ body {
 }
 
 /* ------------------------------
-   CONTAINER PRINCIPAL
+    CONTAINER PRINCIPAL
 ------------------------------ */
 .container {
     max-width: 800px;
@@ -76,7 +76,8 @@ select.error {
 ------------------------------ */
 .add-button,
 .create-teams-button,
-.reset-teams-button {
+.reset-teams-button,
+.clear-button {
     padding: 10px 15px;
     font-size: 16px;
     border: none;
@@ -84,11 +85,15 @@ select.error {
     cursor: pointer;
     color: white;
     transition: background-color 0.3s ease;
+    margin-top: 15px;
 }
 
 .add-button,
 .create-teams-button {
     background-color: #007bff;
+    margin: 5px;
+    padding: 8px;
+    border: none;
 }
 
 .add-button:hover,
@@ -98,13 +103,23 @@ select.error {
 
 .reset-teams-button {
     background-color: #dc3545;
-    font-weight: bold;
-    border-radius: 6px;
+    border: none;
+    border-radius: 4px;
     margin-left: 10px;
+    padding: 8px;
 }
 
 .reset-teams-button:hover {
     background-color: #c82333;
+}
+
+.clear-button {
+    background-color: #6c757d;
+    margin-left: 10px;
+}
+
+.clear-button:hover {
+    background-color: #5a6268;
 }
 
 /* Botões de ações individuais */
@@ -260,10 +275,12 @@ select:focus {
 
     .add-button,
     .create-teams-button,
-    .reset-teams-button {
+    .reset-teams-button,
+    .clear-button {
         width: 100%;
         margin-top: 10px;
         font-size: 15px;
+        margin-left: 0;
     }
 
     .player-list li {
@@ -301,7 +318,8 @@ select:focus {
 
     .add-button,
     .create-teams-button,
-    .reset-teams-button {
+    .reset-teams-button,
+    .clear-button {
         font-size: 14px;
         padding: 8px;
     }

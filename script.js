@@ -3,6 +3,7 @@ const playerList = document.getElementById("playerList");
 const createTeamsButton = document.getElementById("createTeams");
 const reshuffleTeamsButton = document.getElementById("reshuffleTeams");
 const resetTeamsButton = document.getElementById("resetTeams");
+const clearPlayersButton = document.getElementById("clearPlayers");
 const randomizeTeamsCheckbox = document.getElementById("randomizeTeams");
 const fullRandomCheckbox = document.getElementById("fullRandom");
 const teamsDisplay = document.querySelector(".teams-display");
@@ -228,3 +229,4 @@ resetTeamsButton.addEventListener("click", function () {
   randomizeTeamsCheckbox.checked = false;
   fullRandomCheckbox.checked = false;
 });
+
