@@ -4,7 +4,7 @@
 body {
     font-family: sans-serif;
     margin: 20px;
-    background: #f4f4f4 url('img/gollaço.jpg') no-repeat center center;
+    background: #f4f4f4 url('/gollaço.jpg') no-repeat center center;
     background-size: cover;
     color: #333;
 }
