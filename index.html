@@ -18,20 +18,22 @@
     <!-- Seção: Adicionar jogador -->
     <section class="add-player-section">
       <h2>Adicionar Jogador</h2>
-      <form id="playerForm">
+      <form id="playerForm" novalidate>
         <div class="form-group">
           <label for="playerName">Nome do jogador:</label>
           <input 
             type="text" 
             id="playerName" 
+            name="playerName"
             placeholder="Nome do jogador" 
             required 
+            autocomplete="off"
           />
         </div>
 
         <div class="form-group">
           <label for="playerPosition">Posição:</label>
-          <select id="playerPosition" required>
+          <select id="playerPosition" name="playerPosition" required>
             <option value="" disabled selected>Selecione a posição</option>
             <option value="Goleiro">Goleiro</option>
             <option value="Zagueiro">Zagueiro</option>
@@ -42,14 +44,28 @@
           </select>
         </div>
 
+        <div class="form-group">
+          <label for="playerSkill">Nível de Habilidade:</label>
+          <select id="playerSkill" name="playerSkill" required>
+            <option value="">Selecione</option>
+            <option value="1">⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+          </select>
+        </div>
+
         <button type="submit" class="add-button">Adicionar</button>
+        <!-- Mensagem de erro controlada via JS -->
+        <div id="errorMessage" role="alert" aria-live="assertive" style="color: red; margin-top: 10px;"></div>
       </form>
     </section>
 
     <!-- Seção: Lista de jogadores -->
     <section class="player-list-section">
       <h2>Jogadores Adicionados:</h2>
-      <ul id="playerList" class="player-list"></ul>
+      <ul id="playerList" class="player-list" aria-live="polite" aria-relevant="additions"></ul>
     </section>
 
     <!-- Seção: Criação de times -->
@@ -57,31 +73,44 @@
       <div class="controls">
 
         <!-- Opções de aleatoriedade -->
-        <div class="options">
+        <fieldset class="options">
+          <legend>Opções de Aleatoriedade</legend>
           <label>
-            <input type="checkbox" id="randomizeTeams" />
+            <input type="checkbox" id="randomizeTeams" name="randomizeTeams" />
             Aleatoriedade Controlada (respeitar posições)
           </label>
           <label>
-            <input type="checkbox" id="fullRandom" />
+            <input type="checkbox" id="fullRandom" name="fullRandom" />
             Aleatoriedade Total (ignorar posições)
           </label>
-        </div>
+          <label><input type="checkbox" id="balanceBySkill"> Balancear por estrelas ⭐</label>
+
+        </fieldset>
 
         <!-- Botões de ação -->
-        <button id="createTeams" class="create-teams-button">Criar Times</button>
-        <button id="reshuffleTeams" class="create-teams-button">Sortear Novos Times</button>
-        <button id="resetTeams" class="reset-teams-button">Resetar Times</button>
-        <button id="clearPlayers" class="reset-teams-button">Limpar Jogadores</button>
+        <button id="createTeams" class="create-teams-button" type="button">Criar Times</button>
+        <button id="reshuffleTeams" class="create-teams-button" type="button">Sortear Novos Times</button>
+        <button id="resetTeams" class="reset-teams-button" type="button">Resetar Times</button>
+        <button id="clearPlayers" class="reset-teams-button" type="button">Limpar Jogadores</button>
       </div>
     </section>
 
     <!-- Área onde os times serão exibidos -->
-    <section class="teams-display"></section>
+    <section class="teams-display" aria-live="polite" aria-atomic="true"></section>
 
+  </div>
+
+  <!-- Modal de confirmação -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmMessage">
+    <div class="modal-content">
+      <p id="confirmMessage">Tem certeza?</p>
+      <div class="modal-actions">
+        <button id="confirmYes" type="button">Sim</button>
+        <button id="confirmNo" type="button">Cancelar</button>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
